@@ -139,6 +139,8 @@ def fetch_supabase(table, select="*", order=None, limit=None, filters=None):
         url += f"&{filters}"
     try:
         resp = requests.get(url, headers=HEADERS, timeout=15)
+        if resp.status_code == 404:
+            return []  # Table not found -- skip silently
         resp.raise_for_status()
         return resp.json()
     except Exception as e:
